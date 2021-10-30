@@ -20,6 +20,8 @@ R_2 = [320, 450]
 R_3 = [640, 450]
 R_4 = [640, 120]
 
+
+# roi 영역
 vertices_L = [
     (L_1[0], L_1[1]),
     (L_2[0], L_2[1]),
@@ -239,60 +241,6 @@ class Lane_Detection:
             mean_data_R = []
          
         return img_size, mean_data_R
-
-    def angle(self, point):
-        if point is not None:
-
-            x1_l = point[0][0]
-            y1_l = point[0][1]
-            x2_l = point[0][2]
-            y2_l = point[0][3]
-            x1_r = point[1][0]
-            y1_r = point[1][1]
-            x2_r = point[1][2]
-            y2_r = point[1][3]
-
-            l_slope = (float(y1_l) - float(y2_l)) / (float(x1_l) - float(x2_l))
-            r_slope = (float(y1_r) - float(y2_r)) / (float(x1_r) - float(x2_r))
-            # print('slope', l_slope, r_slope)
-
-            l_w_x = (115 - (y1_l - l_slope * x1_l)) / l_slope
-
-            r_w_x = (115 - (y1_r - r_slope * x1_r)) / r_slope
-
-            l_m_x = (270 - (y1_l - l_slope * x1_l)) / l_slope
-            r_m_x = (270 - (y1_r - r_slope * x1_r)) / r_slope
-
-            # print('t', l_m_x, r_m_x)
-
-            m_x = (l_m_x + r_m_x) / 2
-
-            Road_Width = r_w_x - l_w_x
-            Car_Width = (1.16 * Road_Width) / 3.5
-
-            MP_X = (r_w_x + l_w_x) / 2
-
-            VP_X = (y1_r - r_slope * x1_r - y1_l + l_slope * x1_l) / (l_slope - r_slope)
-            VP_Y = l_slope * VP_X + y1_l - l_slope * x1_l
-
-            x0_yr = VP_Y - r_slope * VP_X
-            x0_yl = VP_Y - l_slope * VP_X
-
-            pixel = abs(((VP_Y + 1) - x0_yl) / l_slope - ((VP_Y + 1) - x0_yr) / r_slope)
-            # print("pixel_meter", pixel)
-
-            pixel_per_meter = pixel / 3.5
-
-            Departure_l = (MP_X - VP_X + 0.5 * Car_Width) / (0.5 * Road_Width)
-
-            Departure_r = (-MP_X + VP_X + 0.5 * Car_Width) / (0.5 * Road_Width)
-
-            x_meter = (float(VP_X) - 340) / pixel_per_meter
-
-            return Departure_l, Departure_r, x_meter, VP_X
-        else:
-            print("passed")
-
 
 class Stop_Lane:
     def region_of_interest(self, img, color3=(255, 255, 255), color1=255):
