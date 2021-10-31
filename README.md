@@ -7,7 +7,7 @@
 ![result_L_screenshot_09 04 2021](https://user-images.githubusercontent.com/75787789/139567364-f522219d-e5cc-4c0d-87ba-be478b9e58bb.png)
 
 
-# stoplane![Uploading result_L_screenshot_09.04.2021.png…]()
+# stoplane
 
 
 ![stop](https://user-images.githubusercontent.com/75787789/139259640-f8f8528e-5054-4be1-936d-761baa9b037d.JPG)
