@@ -135,6 +135,7 @@ left_lane_y_2 = deque(maxlen=5)
 for i in range(len(left_lane_y_2)):
     left_lane_y_2[i] = 0
 
+# 왼쪽 실측 데이터
 
 left_x_l = float(586)
 left_y_l = float(871-52.5)
@@ -235,6 +236,8 @@ for i in range(len(right_lane_x_2)):
 right_lane_y_2 = deque(maxlen=5)
 for i in range(len(right_lane_y_2)):
     right_lane_y_2[i] = 0
+
+# 오른쪽 차선 실측
 
 right_x_l = float(586)
 right_y_l = float(871-52.5)
