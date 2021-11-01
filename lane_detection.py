@@ -61,13 +61,11 @@ sequence = False
 
 for i in range(0, number + 1, 1):
     fit2 += sourcePolyfitNDArray[number - i] * (x_axis ** i)
-    # fit3 = sourcePolyfitNDArray[0] * x_axis ** 3 + sourcePolyfitNDArray[1] * x_axis ** 2 + sourcePolyfitNDArray[2] * x_axis ** 1 + sourcePolyfitNDArray[3]
 
 
 def callback_order(msg):
     global sequence
     sequence = msg.second
-
 
 
 class Lane_Detection:
@@ -110,10 +108,6 @@ class Lane_Detection:
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img_Blur = cv2.medianBlur(img_gray, 7)
         img_canny = cv2.Canny(img_Blur, 80, 180, None, 3)
-        #cv2.imshow('original',img)
-        #cv2.imshow('gray',img_gray)
-        #cv2.imshow('blur',img_Blur)
-        #cv2.imshow('canny', img_canny)
 
         return img_canny, img
 
@@ -135,9 +129,6 @@ class Lane_Detection:
                     theta__ = (math.atan(slope) * 180 / 3.14)
 
                     if ((theta__ > -50 and theta__ < 0) or (theta__ > 0 and theta__ < 50)):
-                        b = l[1] - (slope * l[0])
-                        x = (270 - b) / slope
-
                         if (l[0] < 2000):
                             # print(i, "l_l", l)
                             if len(data) < 3:
@@ -200,10 +191,6 @@ class Lane_Detection:
                     #print("lol")
 
                     if ((theta__ > -50 and theta__ < 0) or (theta__ > 0 and theta__ < 50)):
-                        b = l[1] - (slope * l[0])
-                        x = (270 - b) / slope
-                        #print("lol")
-
                         if (l[0] < 2000):
                             # print(i, "l_l", l)
                             if len(data) < 3:
@@ -263,7 +250,7 @@ class Stop_Lane:
     def image_process(self, img):
 
         # cv2.imshow("roi_img",roi_img)
-
+        # hsv 인식
         # img_hsv = cv2.cvtColor(roi_img, cv2.COLOR_BGR2HSV)
         # lower_white = np.array([140, 140, 140], dtype="uint8")
         # upper_white = np.array([255, 255, 255], dtype="uint8")
@@ -315,13 +302,7 @@ class Stop_Lane:
                 k = 0
                 p = i + 1
                 for j in range(p, b):
-                    # print('b-u', b - u)
-                    # print('i',i)
-
-                    # print('j',j)
-                    if (j >= b - u):
-                        # print('o',i)                        break
-                    elif (line__[i][0] == line__[j - k][0]):
+                    if (line__[i][0] == line__[j - k][0]):
                         # print('i', i)
                         # print('j-k',j-k)
                         del (line__[j - k])
