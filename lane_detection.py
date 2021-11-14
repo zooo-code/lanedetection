@@ -39,29 +39,10 @@ vertices_R = [
 mean_data_L = []
 mean_data_R = []
 
-stop_y_data = 0
-
-x = np.array([245, 200, 175, 100, 75, 89, 59, 51, 47, 44, 40, 38, 36])
-x_axis = np.array(range(271))
-y = np.array([77, 110, 132, 197 + 67, 308 + 67, 319, 458, 519, 546, 588, 598, 637, 680])
-
-number = 3
-pixel_y = 30
-sourcePolyfitNDArray = np.polyfit(x, y, number)
-
-roi_y_max = 150
-roi_y_min = 30
-
-fit2 = 0
-
 line_ = []
 line__ = []
 
 sequence = False
-
-for i in range(0, number + 1, 1):
-    fit2 += sourcePolyfitNDArray[number - i] * (x_axis ** i)
-
 
 def callback_order(msg):
     global sequence
