@@ -22,7 +22,6 @@ def region_of_interest(img, color3=(255, 255, 255), color1=255):  # ROI 셋팅
 
 def imgae_process(img):
 
-
     cap_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     #ret, thr1 = cv2.threshold(cap_gray, 200, 255, cv2.THRESH_BINARY)
@@ -38,7 +37,7 @@ def imgae_process(img):
 
 line_ = []
 line__ = []
-
+# 허프라인p 를 이용해 직선의 양끝 좌표를 알아 낸후 좌표들의 차이가 일정 범위 내에 있있을 때 정지선이라 간주한다.
 def houghP(img):
     lines = cv2.HoughLinesP(img, 0.8, np.pi / 180, 90, minLineLength=50, maxLineGap=30)
     print('t',lines)
@@ -85,6 +84,8 @@ while True:
     stop = 1
     img_process = imgae_process(frame1)
     hough = houghP(img_process)
+
+    # 검출된 라인의 길이가 3개 보다 많을 때 직선이라 검출
     if hough is not None:
         draw_lines(frame1, hough)
         a = len(hough)
