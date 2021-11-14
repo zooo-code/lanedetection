@@ -64,30 +64,6 @@ def houghP(img):
                         line__.append(line_[j])
                         line__.append(line_[k + 1 + j])
         print('p', line__)
-
-        b = len(line__)
-        print('t', b)
-        u = 0
-        for i in range(0, b):
-
-            k = 0
-            p = i + 1
-            for j in range(p, b):
-            # print('b-u', b - u)
-            # print('i',i)
-            # print('크기', len(line__))
-            # print('j',j)
-                if (j >= b - u):
-                    # print('o',i)
-                    break
-                elif (line__[i][0] == line__[j - k][0]):
-                # print('i', i)
-                # print('j-k',j-k)
-                    del (line__[j - k])
-                # print(line__)
-                    k += 1
-                    u += 1
-
         return line__
 
 def draw_lines(img, lines):
