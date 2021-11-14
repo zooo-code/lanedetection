@@ -135,14 +135,16 @@ left_lane_y_2 = deque(maxlen=5)
 for i in range(len(left_lane_y_2)):
     left_lane_y_2[i] = 0
 
-# 왼쪽 실측 데이터
 
+
+# 왼쪽 카메라 실측 데이터
 left_x_l = float(586)
 left_y_l = float(871-52.5)
 left_y_b = float(52.5)
 left_h = float(72.5)
 left_s_x = float(640/2)
 left_s_y = float(380)
+
 def left_calculation_theta(lane_center,left_sum_car_theta,robot_heading,real_speed):
     global left_lane_y , left_x_l , left_y_l , left_y_b , left_h , left_s_x , left_s_y
     sum_left_lane_y = 0.0
@@ -237,14 +239,15 @@ right_lane_y_2 = deque(maxlen=5)
 for i in range(len(right_lane_y_2)):
     right_lane_y_2[i] = 0
 
-# 오른쪽 차선 실측
 
+# 오른쪽 실측 데이터
 right_x_l = float(586)
 right_y_l = float(871-52.5)
 right_y_b = float(52.5)
 right_h = float(72.5)
 right_s_x = float(640/2)
 right_s_y = float(380)
+
 def right_calculation_theta(lane_center,right_sum_car_theta,robot_heading,real_speed):
     global right_lane_y , right_x_l , right_y_l , right_y_b , right_h , right_s_x , right_s_y
     sum_right_lane_y = 0.0
@@ -322,6 +325,7 @@ speed_p_gain = 2
 speed_i_gain = 0.02
 speed_err_sum = 0
 count = 0
+
 def calculation_speed(want_speed,now_speed):
     global speed_p_gain, speed_i_gain, speed_err_sum,count
 
