@@ -37,6 +37,7 @@ def imgae_process(img):
 
 line_ = []
 line__ = []
+
 # 허프라인p 를 이용해 직선의 양끝 좌표를 알아 낸후 좌표들의 차이가 일정 범위 내에 있있을 때 정지선이라 간주한다.
 def houghP(img):
     lines = cv2.HoughLinesP(img, 0.8, np.pi / 180, 90, minLineLength=50, maxLineGap=30)
@@ -46,7 +47,6 @@ def houghP(img):
         global line__
         del line_[:]
         del line__[:]
-
 
         for i in lines:
             a = abs(i[0][1] - i[0][3])
@@ -86,6 +86,7 @@ while True:
     hough = houghP(img_process)
 
     # 검출된 라인의 길이가 3개 보다 많을 때 직선이라 검출
+    # 정지선인 경우 stop =0 아닐 경우에는 stop =1 이라 준다.
     if hough is not None:
         draw_lines(frame1, hough)
         a = len(hough)
@@ -97,7 +98,7 @@ while True:
     location = (240, 70)
     font = cv2.FONT_HERSHEY_COMPLEX  # normal size serif font
     fontScale = 1.2
-
+    # stop가 0일때 정지선이라는 것을 의미한다.
     if stop == 0:
 
         cv2.putText(frame1, 'stop', location, font, fontScale, (255,0,0,), 2)

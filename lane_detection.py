@@ -21,7 +21,7 @@ R_3 = [640, 450]
 R_4 = [640, 120]
 
 
-# roi 영역
+# roi 영역을 값을 넣은 후 진행
 vertices_L = [
     (L_1[0], L_1[1]),
     (L_2[0], L_2[1]),
@@ -35,7 +35,7 @@ vertices_R = [
     (R_3[0], R_3[1]),
     (R_4[0], R_4[1])
 ]
-
+# 왼쪽차선 오른쪽 차선의 위치를 넣을 리스트
 mean_data_L = []
 mean_data_R = []
 
@@ -69,7 +69,7 @@ def callback_order(msg):
 
 
 class Lane_Detection:
-
+    # 왼쪽 ROI
     def region_of_interest_L(self, img):
         global vertices_L
         mask = np.zeros_like(img)
@@ -85,7 +85,7 @@ class Lane_Detection:
         ROI_image = cv2.bitwise_and(img, mask)
 
         return ROI_image
-
+    # 오른쪽 ROI
     def region_of_interest_R(self, img):
         global vertices_R
         mask = np.zeros_like(img)
@@ -102,6 +102,7 @@ class Lane_Detection:
 
         return ROI_image
 
+    # 이미지 전처리
     def img_process(self, img):
         # img_size = cv2.resize(img, dsize=(705, 270), interpolation=cv2.INTER_AREA)
 
@@ -110,10 +111,10 @@ class Lane_Detection:
         img_canny = cv2.Canny(img_Blur, 80, 180, None, 3)
 
         return img_canny, img
-
+    # 왼쪽 차선 검출
     def lane_detection_L(self, img, img_size):
         global mean_data_L, L_1, L_2, L_3, L_4, vertices_L
-        # img_pro, img_size = self.img_process(img)
+
         roi = self.region_of_interest_L(img)
         #cv2.imshow('roi_L', roi)
         linesP = cv2.HoughLinesP(roi, 1, np.pi / 180, 50, None, 10, 10)
@@ -121,6 +122,7 @@ class Lane_Detection:
         if linesP is not None:
             data = []
             mean_data_L = []
+            # 검출된 직선중 일정 조건을 만족하지 못한다면 버린다.
             for i in range(0, len(linesP)):
                 l = linesP[i][0]
 
@@ -134,24 +136,14 @@ class Lane_Detection:
                             if len(data) < 3:
                                 data.append(l)
                             cv2.line(img_size, (l[0], l[1]), (l[2], l[3]), (0, 0, 255), 3, cv2.LINE_AA)
-                """
-                if((float(l[1]) - float(l[3])) == 0):
-                    data.append(l)
-                    cv2.line(img_size, (l[0], l[1]), (l[2], l[3]), (0, 0, 255), 3, cv2.LINE_AA)
-                """
-            
+
+            # 검출된 직선의 평균을 구해 그 직선을 차선이라 인식한다.
             if len(data) <= 5 and len(data) != 0:
                 mean_data_L = np.mean(data, axis=0, dtype=int)
                 # print(mean)
                 cv2.line(img_size, (mean_data_L[0], mean_data_L[1]), (mean_data_L[2], mean_data_L[3]), (255, 0, 0), 3,
                          cv2.LINE_AA)
-                """
-                vertices_L = [
-                    (mean_data_L[0] + 30, mean_data_L[1] + 30),
-                    (mean_data_L[0] - 30, mean_data_L[1] - 30),
-                    (mean_data_L[2] - 30, mean_data_L[3] - 30),
-                    (mean_data_L[2] + 30, mean_data_L[3] + 30)
-                ]"""
+            # 만약에 위의 조건을 만족하는 직선이 없을 때 roi를 다시 재조정한다.
             else:
                 vertices_L = [
                     (L_1[0], L_1[1]),
@@ -159,6 +151,7 @@ class Lane_Detection:
                     (L_3[0], L_3[1]),
                     (L_4[0], L_4[1])
                 ]
+        # 이경우에도 roi 재조정
         else:
             vertices_L = [
                 (L_1[0], L_1[1]),
@@ -166,7 +159,7 @@ class Lane_Detection:
                 (L_3[0], L_3[1]),
                 (L_4[0], L_4[1])
             ]
-            
+            # 그리고 빈배열을 만든다.
             mean_data_L = []
         return img_size, mean_data_L
 
@@ -175,7 +168,6 @@ class Lane_Detection:
         roi = self.region_of_interest_R(img)
         cv2.imshow('roi_R', roi)
         linesP = cv2.HoughLinesP(roi, 1, np.pi / 180, 50, None, 10, 10)
-    #print(linesP)
         if linesP is not None:
             #print("lol")
             data = []
@@ -196,14 +188,12 @@ class Lane_Detection:
                             if len(data) < 3:
                                 data.append(l)
                             cv2.line(img_size, (l[0], l[1]), (l[2], l[3]), (0, 0, 255), 3, cv2.LINE_AA)
-                """
-                if((float(l[1]) - float(l[3])) == 0):
-                    data.append(l)
-                """
+
             if len(data) <= 5 and len(data) != 0:
                 mean_data_R = np.mean(data, axis=0, dtype=int)
                 # print(mean)
                 cv2.line(img_size, (mean_data_R[0], mean_data_R[1]), (mean_data_R[2], mean_data_R[3]), (255, 0, 0), 3,cv2.LINE_AA)
+                # 이부분의 경우  ROI를 인식된 차선의 중심으로 일정범위 증가시켜 인식한다.
                 """                
                 vertices_R = [
                     (mean_data_R[0] + 30, mean_data_R[1] + 30),
@@ -211,6 +201,7 @@ class Lane_Detection:
                     (mean_data_R[2] - 30, mean_data_R[3] - 30),
                     (mean_data_R[2] + 30, mean_data_R[3] + 30)
                 ]"""
+
             else:
                 vertices_R = [
                     (R_1[0], R_1[1]),
@@ -228,7 +219,7 @@ class Lane_Detection:
             mean_data_R = []
          
         return img_size, mean_data_R
-
+# 정지선
 class Stop_Lane:
     def region_of_interest(self, img, color3=(255, 255, 255), color1=255):
         global roi_y_max, roi_y_min
@@ -249,23 +240,14 @@ class Stop_Lane:
 
     def image_process(self, img):
 
-        # cv2.imshow("roi_img",roi_img)
-        # hsv 인식
-        # img_hsv = cv2.cvtColor(roi_img, cv2.COLOR_BGR2HSV)
-        # lower_white = np.array([140, 140, 140], dtype="uint8")
-        # upper_white = np.array([255, 255, 255], dtype="uint8")
 
-        # mask_white = cv2.inRange(img_hsv, lower_white, upper_white)
-        # cv2.imshow("mask_w", mask_white)
 
         cgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         frame = cv2.medianBlur(cgray, 5)
 
         canny = cv2.Canny(frame, 50, 200)
-        #roi_img = region_of_interest(canny)
-        #cv2.imshow("canny", canny)
-        #cv2.imshow("can", frame)
+
         return canny
 
     def houghP(self, img):
@@ -324,9 +306,7 @@ class Stop_Lane:
                     roi_y_max = stop_y_data + 15
                     roi_y_min = y_min - 15
 
-            # print("roi_y_range", roi_y_max, roi_y_min)
 
-            # print("stop_y",stop_y_data)
             return line__
         else:
             roi_y_max = 150
@@ -341,20 +321,19 @@ class Stop_Lane:
 
 def main():
     global fit2
+
     rospy.init_node("cam_test", anonymous=True)
     pub = rospy.Publisher("cam", cam, queue_size = 1)
     msg = cam()
 
-
+    # 오른쪽 차선
     cap_R = cv2.VideoCapture(0)
     cap_R.set(3, 640)
     cap_R.set(4, 380)
-
+    # 왼쪽 차선
     cap_L = cv2.VideoCapture(1)
     cap_L.set(3, 640)
     cap_L.set(4, 380)
-
-
 
     ld = Lane_Detection()
     
@@ -363,18 +342,19 @@ def main():
         ret_L, frame_R = cap_R.read()
 
         #cv2.line(frame_L,(320,0),(320,380), (0, 0, 255), 1, cv2.LINE_AA)
-        
+        # 왼쪽
         img_pro_L, img_size_L = ld.img_process(frame_L)
-
         result_L, mean_L = ld.lane_detection_L(img_pro_L, img_size_L)
-        img_pro_R, img_size_R = ld.img_process(frame_R)
 
+        # 오른쪽
+        img_pro_R, img_size_R = ld.img_process(frame_R)
         result_R, mean_R = ld.lane_detection_R(img_pro_R, img_size_R)
+
         cv2.imshow("L", result_L)
         cv2.imshow("R", result_R)
 
 
-
+        # 보내주는곳
         if mean_L != [] and mean_R !=[]:
             msg.x1_L = mean_L[0]
             msg.y1_L = mean_L[1]
